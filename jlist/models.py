@@ -1,23 +1,27 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 
-class UserProfile(models.model):
-    user = models.ForeignKey(User, unique=True, related_name="profile")
-    items = models.ManyToManyField(Item, related_name="profile")
-
-
-
-class Item(models.model):
-    id = models.AutoField(primary_key=True)
-    seller = models.ForeignKey(UserProfile, unique=False, related_name="item" )
+class Item(models.Model):
+    #id = models.AutoField(primary_key=True)
+    seller = models.ForeignKey('UserProfile', unique=False, related_name="item" )
     name = models.CharField(max_length = 50)
     description = models.CharField(max_length = 1000)
-    price = models.DecimalField()
+    price = models.DecimalField(decimal_places=2, max_digits=6)
     sold = models.BooleanField()
     date_added = models.DateField(auto_now_add=True)
     photo = models.URLField(max_length=200)
 
+class UserProfile(models.Model):
+    user = models.ForeignKey(User, unique=True, related_name="profile")
+    items = models.ManyToManyField(Item, related_name="profile")
 
-    
+class Offer(models.Model):
+    seller = models.ForeignKey(UserProfile, unique=False, related_name="seller_offer")
+    buyer = models.ForeignKey(UserProfile, unique=False, related_name="buyer_offer")
+    item = models.ForeignKey(Item, unique=False, related_name="item_offer")
+    date = models.DateField(auto_now_add=True)
+    bid = models.DecimalField(decimal_places=2, max_digits=6) #default should be item price
+
 
