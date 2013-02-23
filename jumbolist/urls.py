@@ -8,6 +8,11 @@ urlpatterns = patterns('',
 
     # Examples:
      url(r'^$', 'jlist.views.load_home', name='home'),
+     url(r'^signup/$', 'jlist.views.register', name='home'),
+     url(r'^login/$', 'jlist.views.login_attempt', name='home'),
+     url(r'^profile/$', 'jlist.views.profile', name='home'),
+
+
     # url(r'^jumbolist/', include('jumbolist.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
