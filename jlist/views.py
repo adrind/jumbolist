@@ -76,7 +76,10 @@ def item_page(request, item_id):
 
 @login_required
 def display_items(request):
-    items = Item.objects.all()
+    user_id = str(request.session['username'])
+    currentUser = UserProfile.objects.get(user=User.objects.get(username=user_id))
+
+    items = Item.objects.exclude(seller__exact=currentUser)
     fields = Item._meta.fields
 
     seller_names = []
