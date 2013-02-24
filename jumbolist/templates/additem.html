@@ -2,14 +2,18 @@
 
 {% block content %}
     {% if success %}
-        YAY
-    {% endif %}
+        Congrats, you just added {{ name }}. Good for you!
+        <a href="/manage/">Manage</a> your items, <a href="/marketplace/">shop</a> for something new, or <a href="/additem/">add</a> something else.
+    {% else %}
 
-    <form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+        <form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
 
-        {{ form.as_p }}
+            {{ form.as_p }}
 
         <button type="submit" class="btn btn-success" value="Add Item">Add Item</button>
+
+
+    {% endif %}
 
 
 {% endblock %}
