@@ -6,15 +6,18 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     # Examples:
-     url(r'^$', 'jlist.views.load_home', name='home'),
-     url(r'^signup/$', 'jlist.views.register', name='register'),
-     url(r'^login/$', 'jlist.views.login_attempt', name='login_attempt'),
-     url(r'^profile/$', 'jlist.views.profile', name='profile'),
-     url(r'^sell/$', 'jlist.views.sellers_page', name='sellers'),
-     url(r'^additem/$', 'jlist.views.additem', name='add'),
-     url(r'^manage/$', 'jlist.views.manage', name='manage'),
+    url(r'^$', 'jlist.views.load_home', name='home'),
+    url(r'^signup/$', 'jlist.views.register', name='register'),
+    url(r'^login/$', 'jlist.views.login_attempt', name='login_attempt'),
+    url(r'^profile/$', 'jlist.views.profile', name='profile'),
+    url(r'^sell/$', 'jlist.views.sellers_page', name='sellers'),
+    url(r'^additem/$', 'jlist.views.additem', name='add'),
+    url(r'^manage/$', 'jlist.views.manage', name='manage'),
     url(r'^marketplace/$', 'jlist.views.display_items', name='display_items'),
     url(r'^buy/$', 'jlist.views.buyers_page', name='buyers'),
+    url(r'^marketplace/item/(?P<item_id>\w+)$', 'jlist.views.item_page', name='item')
+
+
 
 
 

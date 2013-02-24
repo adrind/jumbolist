@@ -61,6 +61,12 @@ def sellers_page(request):
 def buyers_page(request):
     return render_to_response("buy.html", context_instance=RequestContext(request),)
 
+def item_page(request, item_id):
+    item = Item.objects.get(id=item_id)
+    print item_id
+    print item.name
+    return render_to_response("item.html", {'item':item}, context_instance=RequestContext(request),)
+
 
 def display_items(request):
     items = Item.objects.all()
