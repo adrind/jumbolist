@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 
-
 {% block toolbar %}
     <div style="background-color: #9DD2F4; height:460px; border-radius:20px;padding:10px;">
         <p style="font-family:'Domine',serif;font-size:19px;margin-bottom: 15px;margin-top:12;margin-left:9px">Filters</p>
@@ -30,7 +29,7 @@
           Apply
       </button>
       <input type="hidden" name="next" value="{{ next|escape }}"/>
-                <input type="hidden" name="itemidlist" value="{{ itemidlist }}"/>
+                <input type="hidden" name="watcheditemidlist" value="{{ watcheditemidlist }}"/>
 
         </form>
     </div>
@@ -40,28 +39,19 @@
 {% block content %}
 
     <div class="span5" style="margin-left: 10px;">
-        <span style="margin-left:0px;margin-left:10px;font-family:'Domine',serif;font-size:35px;text-align: left">For Sale</span>
-    </div>
-    <div class="span4" style="margin-top: 0px; margin-right: 0px;">
-        <a href="/saveditems/">
-            <div class="span4"
-                 style="font-family:'Domine',serif;font-size:16px;padding-top:0px;padding-bottom:10px;padding-left:220px;margin-right:0px;text-align: left">
-                <span style="background-color: #64421E;padding:10px 15px; width:50px;color:white;border-radius:8px;">View Saved Items</span>
-            </div>
-        </a>
+        <span style="margin-left:0px;margin-left:10px;font-family:'Domine',serif;font-size:35px;text-align: left">Saved Items</span>
     </div>
 
 
-
-    {% if items %}
+    {% if watchedItems %}
         <div class="row">
             <div class="span10">
                 <div class="pagination">
-                    {% if items.has_previous %}
-                        <a href="?page={{ items.previous_page_number }}">previous</a>
+                    {% if watchedItems.has_previous %}
+                        <a href="?page={{ watchedItems.previous_page_number }}">previous</a>
                     {% endif %}
                     <ul>
-                        {% for page in items.paginator.page_range %}
+                        {% for page in watcheditems.paginator.page_range %}
                             {% if page == results.number %}
                                 <li class="active"><a href="?page={{ page }}">{{ page }}</a></li>
                             {% else %}
@@ -69,8 +59,8 @@
                             {% endif %}
                         {% endfor %}
                     </ul>
-                    {% if items.has_next %}
-                        <a href="?page={{ items.next_page_number }}">next</a>
+                    {% if watchedItems.has_next %}
+                        <a href="?page={{ watchedItems.next_page_number }}">next</a>
                     {% endif %}
                 </div>
             </div>
@@ -80,7 +70,7 @@
         <div class="span10">
             <ul class="thumbnails">
 
-                {% for item in items.object_list %}
+                {% for item in watchedItems.object_list %}
                     {% if forloop.counter|divisibleby:5 %}
                         <div class="row">
                     {% endif %}
@@ -88,7 +78,6 @@
                     <div class="thumbnail">
                         <a href="/marketplace/item/{{ item.id }}" rel="superbox[iframe][400x400]"><img
                                 src="{{ item.photo.url }}"/></a><br/>
-                        <!-- <img src="{{ item.photo.url }}"/> -->
                         Price: ${{ item.price }} <br/>
                     </div>
                 </li>

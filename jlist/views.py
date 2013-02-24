@@ -37,9 +37,9 @@ def register(request):
 
         except ValidationError:
             render_to_response("signup.html", {'form': form, 'errors': ['User Already Exists']},
-                               context_instance=RequestContext(request))
+                context_instance=RequestContext(request))
     return render_to_response("signup.html", {'form': form, 'errors': non_field_errors},
-                              context_instance=RequestContext(request), )
+        context_instance=RequestContext(request), )
 
 
 def login_attempt(request):
@@ -93,7 +93,8 @@ def filter_attempt(request):
             # If page is out of range (e.g. 9999), deliver last page of results.
             items = paginator.page(paginator.num_pages)
         return redirect("marketplace.html", {'items': items, 'fields': fields, 'seller_names': seller_names},
-            context_instance=RequestContext(request), )                #return render_to_response("profile.html", {'user': username,}, context_instance=RequestContext(request),)
+            context_instance=RequestContext(
+                request), )                #return render_to_response("profile.html", {'user': username,}, context_instance=RequestContext(request),)
 
 
 @login_required
@@ -115,15 +116,15 @@ def buyers_page(request):
 @login_required
 def item_page(request, item_id):
     item = Item.objects.get(id=item_id)
-    return render_to_response("item.html", {'item':item}, context_instance=RequestContext(request),)
+    return render_to_response("item.html", {'item': item}, context_instance=RequestContext(request), )
+
 
 @login_required
 def watched_item(request, item_id):
     item = Item.objects.get(id=item_id)
     print item_id
     print item.name
-    return render_to_response("watched_item.html", {'item':item}, context_instance=RequestContext(request),)
-
+    return render_to_response("watched_item.html", {'item': item}, context_instance=RequestContext(request), )
 
 
 @login_required
@@ -155,7 +156,6 @@ def display_items(request):
     else:
         items = Item.objects.exclude(seller__exact=currentUser)
 
-
     seller_names = []
     itemlist = items
     itemidlist = [i.id for i in itemlist]
@@ -173,12 +173,69 @@ def display_items(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         items = paginator.page(paginator.num_pages)
 
-    return render_to_response("marketplace.html", {'itemlist':itemlist, 'itemidlist':itemidlist,'items': items, 'fields': fields, 'seller_names': seller_names},
+    return render_to_response("marketplace.html",
+        {'itemlist': itemlist, 'itemidlist': itemidlist, 'items': items, 'fields': fields,
+         'seller_names': seller_names},
+        context_instance=RequestContext(request), )
+
+
+
+
+
+@login_required
+def display_saved_items(request):
+    user_id = str(request.session['username'])
+    currentUser = UserProfile.objects.get(user=User.objects.get(username=user_id))
+    fields = Item._meta.fields
+
+    if request.method == 'POST':
+        watcheditemidlist = request.POST['watcheditemidlist']
+        list1 = ast.literal_eval(watcheditemidlist)
+        watchedItems = Item.objects.filter(id__in=list(list1))
+        lowprice = request.POST['lowprice']
+        highprice = request.POST['highprice']
+        sort = request.POST['sort']
+        if lowprice:
+            lowprice = Decimal(lowprice)
+            print str(lowprice) + "low"
+            watchedItems = watchedItems.filter(price__gte=lowprice)
+        if highprice:
+            highprice = Decimal(highprice)
+            watchedItems = watchedItems.filter(price__lte=highprice)
+        if sort:
+            if sort == "sortprice":
+                watchedItems = watchedItems.order_by("price")
+            elif sort == "sortdate":
+                watchedItems = watchedItems.order_by("date_added")
+
+    else:
+        currentUser = UserProfile.objects.get(user=User.objects.get(username=user_id))
+        watchedItems = currentUser.watched_items.all()
+
+    seller_names = []
+    watcheditemlist = watchedItems
+    watcheditemidlist = [i.id for i in watcheditemlist]
+    for item in watchedItems:
+        user = User.objects.get(profile=item.seller)
+        seller_names.append(user.username)
+    paginator = Paginator(watchedItems, 10)
+    page = request.GET.get('page', 1)
+    try:
+        watchedItems = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        watchedItems = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        watchedItems = paginator.page(paginator.num_pages)
+
+    return render_to_response("saveditems.html",
+        {'watcheditemlist': watcheditemlist, 'watcheditemidlist': watcheditemidlist, 'watchedItems': watchedItems,
+         'fields': fields, 'seller_names': seller_names},
         context_instance=RequestContext(request), )
 
 
 @login_required
-
 def display_watched_items(request):
     user_id = str(request.session['username'])
     currentUser = UserProfile.objects.get(user=User.objects.get(username=user_id))
@@ -192,7 +249,8 @@ def display_watched_items(request):
         user = User.objects.get(profile=item.seller)
         item.seller_name = user.username
 
-    return render_to_response("watcheditems.html", {'items': watchedItems, 'fields': fields, 'seller_names': seller_names},
+    return render_to_response("watcheditems.html",
+        {'items': watchedItems, 'fields': fields, 'seller_names': seller_names},
         context_instance=RequestContext(request), )
 
 
@@ -208,12 +266,14 @@ def additem(request):
             new_item.photo = request.FILES['photo']
             new_item.seller = u
             new_item.save()
-            return render_to_response("additem.html", {'form': None, 'success': True, 'item': new_item.name, 'pic': new_item.photo.url},
-                                      context_instance=RequestContext(request), )
+            return render_to_response("additem.html",
+                {'form': None, 'success': True, 'item': new_item.name, 'pic': new_item.photo.url},
+                context_instance=RequestContext(request), )
         return render_to_response("additem.html", {'form': form, 'errors': non_field_errors, },
-                                  context_instance=RequestContext(request), )
+            context_instance=RequestContext(request), )
     form = ItemForm(None)
     return render_to_response("additem.html", {'form': form}, context_instance=RequestContext(request), )
+
 
 @login_required
 def manage(request):
@@ -221,16 +281,16 @@ def manage(request):
     u = UserProfile.objects.get(user=User.objects.get(username=user_id))
     items = list(Item.objects.filter(seller=u))
     if items:
-      paginator = Paginator(items, 10)
-      page = request.GET.get('page', 1)
-      try:
-          items = paginator.page(page)
-      except PageNotAnInteger:
-          # If page is not an integer, deliver first page.
-          items = paginator.page(1)
-      except EmptyPage:
-          # If page is out of range (e.g. 9999), deliver last page of results.
-          items = paginator.page(paginator.num_pages)
+        paginator = Paginator(items, 10)
+        page = request.GET.get('page', 1)
+        try:
+            items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            items = paginator.page(paginator.num_pages)
     return render_to_response("manage.html", {'items': items, })
 
 
@@ -242,6 +302,7 @@ def save_item(request, item_id):
     u.save()
     return HttpResponseRedirect("/saveditems/")
 
+
 def remove_item(request, item_id):
     item = Item.objects.get(id=item_id)
     user_id = str(request.session['username'])
@@ -249,6 +310,7 @@ def remove_item(request, item_id):
     u.watched_items.remove(item)
     u.save()
     return HttpResponseRedirect("/saveditems/")
+
 
 def send_email(request, item_id):
     if request.method == 'POST':
@@ -261,8 +323,9 @@ def send_email(request, item_id):
             seller = User.objects.get(profile=item.seller)
             send_mail(subject, message, u.email,
                 [seller.email], fail_silently=False)
-            return render_to_response('email.html', {'success' : True, 'name' : u.username }, context_instance=RequestContext(request),)
+            return render_to_response('email.html', {'success': True, 'name': u.username},
+                context_instance=RequestContext(request), )
     else:
         form = EmailForm()
 
-    return render_to_response('email.html', {'form' : form}, context_instance=RequestContext(request),)
+    return render_to_response('email.html', {'form': form}, context_instance=RequestContext(request), )
