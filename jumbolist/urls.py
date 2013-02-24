@@ -5,14 +5,13 @@ from django.conf.urls import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-
     # Examples:
      url(r'^$', 'jlist.views.load_home', name='home'),
      url(r'^signup/$', 'jlist.views.register', name='register'),
      url(r'^login/$', 'jlist.views.login_attempt', name='login_attempt'),
      url(r'^profile/$', 'jlist.views.profile', name='profile'),
      url(r'^sell/$', 'jlist.views.sellers_page', name='sellers'),
-     url(r'^additem/$', 'jlist.views.add', name='add'),
+     url(r'^additem/$', 'jlist.views.additem', name='add'),
 
 
 

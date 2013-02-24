@@ -1,8 +1,9 @@
-from django.forms import ModelForm, TextInput, PasswordInput, CharField, RegexField, ValidationError
+from django.forms import ModelForm, TextInput, PasswordInput, CharField, RegexField, ValidationError, DecimalField, FileField
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from jlist.models import UserProfile, Item
 from django.db import IntegrityError
+from django import forms
 
 class MyUserForm(ModelForm):
     email = CharField(label="", widget=TextInput(attrs={'placeholder': 'E-mail address'}))
@@ -41,12 +42,22 @@ class MyUserForm(ModelForm):
 
 
 
-
-
 class ItemForm(ModelForm):
     name = CharField(label="", widget=TextInput(attrs={'placeholder': 'Title'}))
-    description = CharField(label="", widget=TextInput(attrs={'placeholder': 'Title'}))
+    description = CharField(label="", widget=TextInput(attrs={'placeholder': 'Description'}))
+    price = DecimalField(decimal_places=2, widget=TextInput(attrs={'placeholder': 'Price'}))
     #photo = FileField()
+
     class Meta:
         model=Item
-        fields = {'seller', 'name', 'description', 'price', 'photo',}
+        fields = {'price', 'description', 'name',}
+
+    def save(self):
+        item = Item()
+        item.name = self.cleaned_data['name']
+        item.description = self.cleaned_data['description']
+        item.price = self.cleaned_data['price']
+        item.sold = False
+        item.photo = "something.jpeg"
+        #item.user = User.objects.get(user.username=)
+        return item
