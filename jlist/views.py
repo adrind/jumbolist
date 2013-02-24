@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth import authenticate, logout, login
 from django.forms import ValidationError
+from jlist.models import Item, UserProfile, User
 
 def load_home(request):
     return render_to_response("landing.html")
@@ -50,6 +51,19 @@ def profile(request):
 
 def sellers_page(request):
     return render_to_response("sell.html", context_instance=RequestContext(request),)
+
+
+def display_items(request):
+    items = Item.objects.all()
+    fields    = Item._meta.fields
+
+    seller_names = []
+    for item in items:
+        #userP = UserProfile.objects.get(item.seller)
+        user = User.objects.get(profile=item.seller)
+        seller_names.append(user.username)
+
+    return render_to_response("displayItems.html", {'items':items, 'fields':fields, 'seller_names':seller_names}, context_instance=RequestContext(request),)
 
 '''def add(request):
     if request.method == 'POST':
