@@ -4,66 +4,81 @@
 {% block content %}
 
 
-        <h2>For Sale</h2>
 
-        {% if items %}
-            <div class="row">
+        <div class="span5" style="margin-left: 10px;">
+            <span style="margin-left:0px;margin-left:10px;font-family:'Domine',serif;font-size:35px;text-align: left">For Sale</span>
+        </div>
+        <div class="span4" style="margin-top: 0px; margin-right: 0px;">
+            <a href="/saveditems/">
+                <div class="span4"
+                     style="font-family:'Domine',serif;font-size:16px;padding-top:0px;padding-bottom:10px;padding-left:220px;margin-right:0px;text-align: left">
+                    <span style="background-color: #64421E;padding:10px 15px; width:50px;color:white;border-radius:8px;">View Saved Items</span>
+                </div>
+            </a>
+        </div>
+
+
+
+
+    {% if items %}
+        <div class="row">
             <div class="span10">
-            <div class="pagination">
+                <div class="pagination">
 
-            {% if items.has_previous %}
-              <a href="?page={{ items.previous_page_number }}">previous</a>
-            {% endif %}
+                    {% if items.has_previous %}
+                        <a href="?page={{ items.previous_page_number }}">previous</a>
+                    {% endif %}
 
-            <ul>
-            {% for page in items.paginator.page_range %}
-                {% if page == results.number %}
-                  <li class="active"><a href="?page={{ page }}">{{ page }}</a></li>
-                {% else %}
-                  <li><a href="?page={{ page }}">{{ page }}</a></li>
-                {% endif %}
-            {% endfor %}
-            </ul>
-            {% if items.has_next %}
-              <a href="?page={{ items.next_page_number }}">next</a>
-            {% endif %}
+                    <ul>
+                        {% for page in items.paginator.page_range %}
+                            {% if page == results.number %}
+                                <li class="active"><a href="?page={{ page }}">{{ page }}</a></li>
+                            {% else %}
+                                <li><a href="?page={{ page }}">{{ page }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    {% if items.has_next %}
+                        <a href="?page={{ items.next_page_number }}">next</a>
+                    {% endif %}
+                </div>
             </div>
-            </div>
-            </div>
+        </div>
         <div id="pagination">
         <div class="row">
         <div class="span10">
-        <ul class ="thumbnails">
+            <ul class="thumbnails">
 
-            {% for item in items.object_list %}
-                {% if forloop.counter|divisibleby:5 %}
-                    <div class = "row">
-                {% endif %}
+                {% for item in items.object_list %}
+                    {% if forloop.counter|divisibleby:5 %}
+                        <div class="row">
+                    {% endif %}
                 <li class="span2">
-                <div class="thumbnail">
-                    <a href="/marketplace/item/{{ item.id }}" rel="superbox[iframe][700x500]"><img src="{{ item.photo.url }}" /></a><br />
-                   <!-- <img src="{{ item.photo.url }}"/> -->
-                    Price: ${{ item.price }} <br />
-                </div>
+                    <div class="thumbnail">
+                        <a href="/marketplace/item/{{ item.id }}" rel="superbox[iframe][700x500]"><img
+                                src="{{ item.photo.url }}"/></a><br/>
+                        <!-- <img src="{{ item.photo.url }}"/> -->
+                        Price: ${{ item.price }} <br/>
+                    </div>
                 </li>
                 {% if forloop.counter|divisibleby:5 %}
-                </div>
+                    </div>
                 {% endif %}
-            {% endfor %}
-        </ul>
+                {% endfor %}
+            </ul>
         </div>
-        {% else %}
-            There's nothing for sale!? Crazy!!
-            <div style="height:500px;"></div>
-        {% endif %}
+    {% else %}
+        There's nothing for sale!? Crazy!!
+        <div style="height:500px;"></div>
+    {% endif %}
 
-    {% endblock %}
-
-
+{% endblock %}
 
 
 
-   <!-- <h2>Items</h2>
+
+
+<!-- <h2>Items</h2>
     <table class="table">
         <tr>
             <th>Seller</th>
