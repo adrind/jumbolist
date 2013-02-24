@@ -1,8 +1,8 @@
-from django.forms import ModelForm, TextInput, PasswordInput, CharField, RegexField, ValidationError, DecimalField, FileField
+from django.forms import ModelForm, TextInput, PasswordInput, CharField, RegexField, ValidationError, DecimalField
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from jlist.models import UserProfile, Item
-from django.db import IntegrityError
+from django.db import IntegrityError, models
 from django import forms
 
 class MyUserForm(ModelForm):
@@ -46,11 +46,11 @@ class ItemForm(ModelForm):
     name = CharField(label="", widget=TextInput(attrs={'placeholder': 'Title'}))
     description = CharField(label="", widget=TextInput(attrs={'placeholder': 'Description'}))
     price = DecimalField(decimal_places=2, widget=TextInput(attrs={'placeholder': 'Price'}))
-    #photo = FileField()
+    photo = forms.FileField(label='Upload a photo!')
 
     class Meta:
         model=Item
-        fields = {'price', 'description', 'name',}
+        fields = {'price', 'description', 'name', 'photo'}
 
     def save(self):
         item = Item()
@@ -58,6 +58,6 @@ class ItemForm(ModelForm):
         item.description = self.cleaned_data['description']
         item.price = self.cleaned_data['price']
         item.sold = False
-        item.photo = "http://127.0.0.1:8000/static/images/something.jpg"
+        #item.photo = "http://127.0.0.1:8000/static/images/something.jpg"
         #item.user = User.objects.get(user.username=)
         return item
