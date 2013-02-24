@@ -17,6 +17,9 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True, related_name="profile")
     items = models.ManyToManyField(Item, related_name="profile")
 
+
+
+
 class Offer(models.Model):
     seller = models.ForeignKey(UserProfile, unique=False, related_name="seller_offer")
     buyer = models.ForeignKey(UserProfile, unique=False, related_name="buyer_offer")

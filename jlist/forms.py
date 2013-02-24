@@ -1,6 +1,8 @@
 from django.forms import ModelForm, TextInput, PasswordInput, CharField, RegexField, ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from jlist.models import UserProfile, Item
+from django.db import IntegrityError
 
 class MyUserForm(ModelForm):
     email = CharField(label="", widget=TextInput(attrs={'placeholder': 'E-mail address'}))
@@ -12,7 +14,7 @@ class MyUserForm(ModelForm):
     password2 = CharField(label="", widget=PasswordInput(attrs={'placeholder':'Re-type Password'}))
 
     class Meta:
-        model=User
+        model=UserProfile
         fields = { 'email', 'username', 'password',}
 
     def clean_password2(self):
@@ -26,18 +28,25 @@ class MyUserForm(ModelForm):
         return password2
 
     def save(self, commit=True):
-        user = super(MyUserForm, self).save(commit=False)
-        user.set_password(self.clean_password2())
-        if commit:
+        try:
+            user = User.objects.create_user(self.cleaned_data['username'], self.cleaned_data['email'], self.clean_password2())
             user.save()
-        return user
+            #user = super(MyUserForm, self).save(commit=False)
+            user_profile = UserProfile()
+            user_profile.user = user
+            user_profile.save()
+            return user_profile
+        except IntegrityError:
+            raise ValidationError("Username already taken!")
 
 
 
-class MyUserCreationForm(UserCreationForm):
-        def __init__(self, *args, **kwargs):
-            super(MyUserCreationForm, self).__init__(*args, **kwargs)
-            self.fields['username'].widget.attrs['placeholder'] = u'Username'
-            self.fields['password'].widget.attrs['placeholder'] = u'Password'
-            self.fields['email'].widget.attrs['placeholder'] = u'Email'
 
+
+class ItemForm(ModelForm):
+    name = CharField(label="", widget=TextInput(attrs={'placeholder': 'Title'}))
+    description = CharField(label="", widget=TextInput(attrs={'placeholder': 'Title'}))
+    #photo = FileField()
+    class Meta:
+        model=Item
+        fields = {'seller', 'name', 'description', 'price', 'photo',}
