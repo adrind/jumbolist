@@ -12,6 +12,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from collections import defaultdict
+from decimal import Decimal
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
+import ast
 from django.core.mail import send_mail
 
 def load_home(request):
@@ -56,18 +60,57 @@ def login_attempt(request):
     else:
         return render_to_response("login.html", locals(), context_instance=RequestContext(request), )
 
+
+def filter_attempt(request):
+    if request.method == 'POST':
+        print "postmethod"
+        user_id = str(request.session['username'])
+        currentUser = UserProfile.objects.get(user=User.objects.get(username=user_id))
+        items = Item.objects.exclude(seller__exact=currentUser)
+        fields = Item._meta.fields
+        lowprice = request.POST['lowprice']
+        highprice = request.POST['highprice']
+        if lowprice:
+            lowprice = Decimal(lowprice)
+            print str(lowprice) + "low"
+            items = items.filter(price__gte=lowprice)
+        if highprice:
+            highprice = Decimal(highprice)
+            items = items.filter(price__lte=highprice)
+        seller_names = []
+        for item in items:
+            #userP = UserProfile.objects.get(item.seller)
+            user = User.objects.get(profile=item.seller)
+            seller_names.append(user.username)
+        paginator = Paginator(items, 10)
+        page = request.GET.get('page', 1)
+        try:
+            items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            items = paginator.page(paginator.num_pages)
+        return redirect("marketplace.html", {'items': items, 'fields': fields, 'seller_names': seller_names},
+            context_instance=RequestContext(request), )                #return render_to_response("profile.html", {'user': username,}, context_instance=RequestContext(request),)
+
+
 @login_required
 def profile(request):
     name = request.session['username']
     return render_to_response("profile.html", {'name': name}, context_instance=RequestContext(request), )
 
+
 @login_required
 def sellers_page(request):
     return render_to_response("sell.html", context_instance=RequestContext(request), )
 
+
 @login_required
 def buyers_page(request):
     return render_to_response("buy.html", context_instance=RequestContext(request), )
+
 
 @login_required
 def item_page(request, item_id):
@@ -82,17 +125,34 @@ def watched_item(request, item_id):
     return render_to_response("watched_item.html", {'item':item}, context_instance=RequestContext(request),)
 
 
+
 @login_required
 def display_items(request):
     user_id = str(request.session['username'])
     currentUser = UserProfile.objects.get(user=User.objects.get(username=user_id))
-
-    items = Item.objects.exclude(seller__exact=currentUser)
     fields = Item._meta.fields
 
+    if request.method == 'POST':
+        itemidlist = request.POST['itemidlist']
+        list1 = ast.literal_eval(itemidlist)
+        items = Item.objects.filter(id__in=list(list1))
+        lowprice = request.POST['lowprice']
+        highprice = request.POST['highprice']
+        if lowprice:
+            lowprice = Decimal(lowprice)
+            print str(lowprice) + "low"
+            items = items.filter(price__gte=lowprice)
+        if highprice:
+            highprice = Decimal(highprice)
+            items = items.filter(price__lte=highprice)
+    else:
+        items = Item.objects.exclude(seller__exact=currentUser)
+
+
     seller_names = []
+    itemlist = items
+    itemidlist = [i.id for i in itemlist]
     for item in items:
-        #userP = UserProfile.objects.get(item.seller)
         user = User.objects.get(profile=item.seller)
         seller_names.append(user.username)
     paginator = Paginator(items, 10)
@@ -106,8 +166,10 @@ def display_items(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         items = paginator.page(paginator.num_pages)
 
-    return render_to_response("marketplace.html", {'items': items, 'fields': fields, 'seller_names': seller_names},
-                              context_instance=RequestContext(request), )
+    return render_to_response("marketplace.html", {'itemlist':itemlist, 'itemidlist':itemidlist,'items': items, 'fields': fields, 'seller_names': seller_names},
+        context_instance=RequestContext(request), )
+
+
 @login_required
 
 def display_watched_items(request):
@@ -197,4 +259,3 @@ def send_email(request, item_id):
         form = EmailForm()
 
     return render_to_response('email.html', {'form' : form}, context_instance=RequestContext(request),)
-
