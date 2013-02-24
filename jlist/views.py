@@ -134,12 +134,14 @@ def display_items(request):
     fields = Item._meta.fields
 
     if request.method == 'POST':
-        itemidlist = request.POST['itemidlist']
-        list1 = ast.literal_eval(itemidlist)
-        items = Item.objects.filter(id__in=list(list1))
+      # itemidlist = request.POST['itemidlist']
+       #  list1 = ast.literal_eval(itemidlist)
+       # items = Item.objects.filter(id__in=list(list1))
+        items = Item.objects.all()
         lowprice = request.POST['lowprice']
         highprice = request.POST['highprice']
-        sort = request.POST['sort']
+        #sort = request.POST['sort']
+       # cat = request.POST['cat']
         if lowprice:
             lowprice = Decimal(lowprice)
             print str(lowprice) + "low"
@@ -147,11 +149,29 @@ def display_items(request):
         if highprice:
             highprice = Decimal(highprice)
             items = items.filter(price__lte=highprice)
-        if sort:
+        if request.POST.has_key('sort'):
+            sort = request.POST['sort']
             if sort == "sortprice":
                 items = items.order_by("price")
             elif sort == "sortdate":
                 items = items.order_by("date_added")
+        if request.POST.has_key('cat'):
+
+            cat = request.POST.getlist('cat')
+            print "has key cat"
+            print cat
+
+            for c in cat:
+                print c
+            if 'catBA' not in cat:
+                items = items.exclude(category__exact='BA')
+            if 'catBD' not in cat:
+                items = items.exclude(category__exact='BD')
+            if 'catKH' not in cat:
+                items = items.exclude(category__exact='KH')
+            if 'catLR' not in cat:
+                items = items.exclude(category__exact='LR')
+           #print request.POST['cat']
 
     else:
         items = Item.objects.exclude(seller__exact=currentUser)
@@ -189,12 +209,12 @@ def display_saved_items(request):
     fields = Item._meta.fields
 
     if request.method == 'POST':
-        watcheditemidlist = request.POST['watcheditemidlist']
-        list1 = ast.literal_eval(watcheditemidlist)
-        watchedItems = Item.objects.filter(id__in=list(list1))
+       #watcheditemidlist = request.POST['watcheditemidlist']
+       # list1 = ast.literal_eval(watcheditemidlist)
+      #  watchedItems = Item.objects.filter(id__in=list(list1))
+        watchedItems = currentUser.watched_items.all()
         lowprice = request.POST['lowprice']
         highprice = request.POST['highprice']
-        sort = request.POST['sort']
         if lowprice:
             lowprice = Decimal(lowprice)
             print str(lowprice) + "low"
@@ -202,11 +222,16 @@ def display_saved_items(request):
         if highprice:
             highprice = Decimal(highprice)
             watchedItems = watchedItems.filter(price__lte=highprice)
-        if sort:
+        if request.POST.has_key('sort'):
+            sort = request.POST['sort']
             if sort == "sortprice":
                 watchedItems = watchedItems.order_by("price")
             elif sort == "sortdate":
                 watchedItems = watchedItems.order_by("date_added")
+        if request.POST.has_key('cat'):
+            cat = request.POST['cat']
+            print request.POST['cat']
+
 
     else:
         currentUser = UserProfile.objects.get(user=User.objects.get(username=user_id))
