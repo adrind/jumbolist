@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, logout, login
 from django.forms import ValidationError
 from jlist.models import Item, UserProfile, User
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 def load_home(request):
@@ -99,7 +100,7 @@ def additem(request):
             new_item.photo = request.FILES['photo']
             new_item.seller = u
             new_item.save()
-            return render_to_response("additem.html", {'form': None, 'success': True},
+            return render_to_response("additem.html", {'form': None, 'success': True, 'item':new_item.name},
                                       context_instance=RequestContext(request), )
         return render_to_response("additem.html", {'form': form, 'errors': non_field_errors, },
                                   context_instance=RequestContext(request), )
