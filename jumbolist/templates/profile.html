@@ -2,7 +2,30 @@
 
 {% block content %}
 
-    Hi {{ name }}<br/>
-    <a href='/buy'>Buy! </a>or <a href="/sell">Sell!</a>
+
+    <h2>What's up {{ name }}?</h2><br/>
+
+    <ul class="thumbnails">
+        <li class = "span3">
+            <a href="/buy/">
+            <img src="http://127.0.0.1:8000/static/images/buy.jpg" /></a>
+            <div class="text-center"><h3>Buy?</h3></div>
+        </li>
+        <li class = "span3">
+            <div style="height:50px;"></div>
+            <div class="text-center">
+            <h4>or</h4>
+            </div>
+        </li>
+        <li class = "span3">
+            <a href="/sell">
+            <img src="http://127.0.0.1:8000/static/images/sell.jpg" />
+                <div class="text-center"></a>
+
+                <h3>Sell?</h3>
+            </div>
+        </li>
+
+    </ul>
 
 {% endblock %}
