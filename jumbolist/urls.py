@@ -12,7 +12,7 @@ urlpatterns = patterns('',
      url(r'^profile/$', 'jlist.views.profile', name='profile'),
      url(r'^sell/$', 'jlist.views.sellers_page', name='sellers'),
      url(r'^additem/$', 'jlist.views.additem', name='add'),
-
+     url(r'^manage/$', 'jlist.views.manage', name='manage'),
 
 
     # url(r'^jumbolist/', include('jumbolist.foo.urls')),

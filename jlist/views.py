@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response
 from jlist.forms import MyUserForm, ItemForm
-from jlist.models import UserProfile
+from jlist.models import UserProfile, Item
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth import authenticate, logout, login
@@ -67,3 +67,9 @@ def additem(request):
             return render_to_response("additem.html", {'form':None, 'success' : True}, context_instance=RequestContext(request),)
         return render_to_response("additem.html", {'form': form, 'errors': non_field_errors, }, context_instance=RequestContext(request),)
     return render_to_response("additem.html", {'form': form},  context_instance=RequestContext(request),)
+
+def manage(request):
+    user_id = str(request.session['username'])
+    u = UserProfile.objects.get(user=User.objects.get(username = user_id))
+    items = list(Item.objects.filter(seller=u))
+    return render_to_response("manage.html", {'items':items,})
