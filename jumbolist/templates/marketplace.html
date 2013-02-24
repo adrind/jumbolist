@@ -7,23 +7,31 @@
         <p>Filters</p>
 
         <form action="/marketplace/" method="post"> {% csrf_token %}
-                <fieldset style="border:2px groove white;display:block;padding:8.75px 10.5px;margin:5px;">
-                    <legend style="padding:0px 2px 5px 2px;border:none;margin-bottom: 0px;font-size:13px;line-height:20px;padding-top:5px;width:75px;font-family:'Domine',serif;">Price range</legend>
-                    <input style="width:40px;" type="text" id="id_lowprice" name="lowprice" placeholder="low">
-                    <span>-</span>
-                    <input style="Width:40px;" type="text" id="id_highprice" name="highprice" placeholder="high"/> <br/>
-                </fieldset>
+            <fieldset style="border:2px groove white;display:block;padding:8.75px 10.5px;margin:5px;">
+                <legend style="padding:0px 2px 5px 2px;border:none;margin-bottom: 0px;font-size:13px;line-height:20px;padding-top:5px;width:75px;font-family:'Domine',serif;">
+                    Price range
+                </legend>
+                <input style="width:40px;" type="text" id="id_lowprice" name="lowprice" placeholder="low">
+                <span>-</span>
+                <input style="Width:40px;" type="text" id="id_highprice" name="highprice" placeholder="high"/> <br/>
+            </fieldset>
             <br>
             <fieldset style="border:2px groove white;display:block;padding:8.75px 10.5px;margin:5px;">
                 <legend style="padding:0px 2px 5px 2px;border:none;margin-bottom: 0px;font-size:13px;line-height:20px;padding-top:5px;
-                width:55px;font-family:'Domine',serif;">Sort By</legend>
-                <label><input style="width:40px;" type="radio" id="id_sortprice" name="sort" value="sortprice"/>Price</label>
-                <label><input style="Width:40px;" type="radio" id="id_sortdate" name="sort" value="sortdate"/>Date</label>
+                width:55px;font-family:'Domine',serif;">Sort By
+                </legend>
+                <label><input style="width:40px;" type="radio" id="id_sortprice" name="sort"
+                              value="sortprice"/>Price</label>
+                <label><input style="Width:40px;" type="radio" id="id_sortdate" name="sort"
+                              value="sortdate"/>Date</label>
             </fieldset>
             <br>
-      <span class="submit"><button class="btn btn" style="float:right;margin-right: 10px;"type="submit" value="Apply">Apply
+      <span class="submit"><button class="btn btn" style="float:right;margin-right: 10px;" type="submit" value="Apply">
+          Apply
       </button>
       <input type="hidden" name="next" value="{{ next|escape }}"/>
+                <input type="hidden" name="itemidlist" value="{{ itemidlist }}"/>
+
         </form>
     </div>
 {% endblock %}
