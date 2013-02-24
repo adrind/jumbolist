@@ -3,7 +3,65 @@
 {% block content %}
 
 
-    <h2 xmlns="http://www.w3.org/1999/html">Watched Items</h2>
+    <h2>Watched Items</h2>
+
+    {% if items %}
+        <div class="row">
+        <div class="span10">
+        <div class="pagination">
+
+        {% if items.has_previous %}
+          <a href="?page={{ items.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <ul>
+        {% for page in items.paginator.page_range %}
+            {% if page == results.number %}
+              <li class="active"><a href="?page={{ page }}">{{ page }}</a></li>
+            {% else %}
+              <li><a href="?page={{ page }}">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+        {% if items.has_next %}
+          <a href="?page={{ items.next_page_number }}">next</a>
+        {% endif %}
+        </div>
+        </div>
+        </div>
+    <div id="pagination">
+    <div class="row">
+    <div class="span10">
+    <ul class ="thumbnails">
+        {% for item in items %}
+            {% if forloop.counter|divisibleby:5 %}
+                <div class = "row">
+            {% endif %}
+            <li class="span2">
+            <div class="thumbnail">
+                <a href="/marketplace/item/{{ item.id }}" rel="superbox[iframe][700x500]"><img src="{{ item.photo.url }}" /></a><br />
+               <!-- <img src="{{ item.photo.url }}"/> -->
+                Price: ${{ item.price }} <br />
+                Seller: {{ seller_names.item.id }}
+            </div>
+            </li>
+            {% if forloop.counter|divisibleby:5 %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    </div>
+    {% else %}
+        You're not watching anything!
+        <div style="height:500px;"></div>
+    {% endif %}
+
+{% endblock %}
+
+
+
+
+<!--
     <table class="table">
         <tr>
             <th>Seller</th>
@@ -27,6 +85,5 @@
         {% endfor %}
         </tbody>
     </table>
+-->
 
-
-{% endblock %}

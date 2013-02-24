@@ -16,10 +16,12 @@ urlpatterns = patterns('',
     url(r'^additem/$', 'jlist.views.additem', name='add'),
     url(r'^manage/$', 'jlist.views.manage', name='manage'),
     url(r'^marketplace/$', 'jlist.views.display_items', name='display_items'),
-    url(r'^watcheditems/$', 'jlist.views.display_watched_items', name='display_watched_items'),
-
+    url(r'^saveditems/$', 'jlist.views.display_watched_items', name='display_watched_items'),
     url(r'^buy/$', 'jlist.views.buyers_page', name='buyers'),
-    url(r'^marketplace/item/(?P<item_id>\w+)$', 'jlist.views.item_page', name='item')
+    url(r'^marketplace/item/(?P<item_id>\w+)$', 'jlist.views.item_page', name='item'),
+    url(r'^manage/item/(?P<item_id>\w+)$', 'jlist.views.item_page', name='seller_item'),
+    url(r'^save/item/(?P<item_id>\w+)$', 'jlist.views.save_item', name='save_item'),
+
 
 
 

@@ -11,6 +11,7 @@ from jlist.models import Item, UserProfile, User
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from collections import defaultdict
 
 
 def load_home(request):
@@ -88,6 +89,16 @@ def display_items(request):
         #userP = UserProfile.objects.get(item.seller)
         user = User.objects.get(profile=item.seller)
         seller_names.append(user.username)
+    paginator = Paginator(items, 10)
+    page = request.GET.get('page', 1)
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        items = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        items = paginator.page(paginator.num_pages)
 
     return render_to_response("marketplace.html", {'items': items, 'fields': fields, 'seller_names': seller_names},
                               context_instance=RequestContext(request), )
@@ -100,13 +111,13 @@ def display_watched_items(request):
 
     fields = Item._meta.fields
 
-    seller_names = []
+    seller_names = defaultdict(list)
     for item in watchedItems:
         #userP = UserProfile.objects.get(item.seller)
         user = User.objects.get(profile=item.seller)
-        seller_names.append(user.username)
+        seller_names[item.id] = user.username
 
-    return render_to_response("watcheditems.html", {'watchedItems': watchedItems, 'fields': fields, 'seller_names': seller_names},
+    return render_to_response("watcheditems.html", {'items': watchedItems, 'fields': fields, 'seller_names': seller_names},
         context_instance=RequestContext(request), )
 
 
@@ -133,8 +144,8 @@ def additem(request):
 def manage(request):
     user_id = str(request.session['username'])
     u = UserProfile.objects.get(user=User.objects.get(username=user_id))
-    things = list(Item.objects.filter(seller=u))
-    if things:
+    items = list(Item.objects.filter(seller=u))
+    if items:
       paginator = Paginator(things, 10)
       page = request.GET.get('page', 1)
       try:
@@ -145,6 +156,14 @@ def manage(request):
       except EmptyPage:
           # If page is out of range (e.g. 9999), deliver last page of results.
           items = paginator.page(paginator.num_pages)
-
-
     return render_to_response("manage.html", {'items': items, })
+
+
+def save_item(request, item_id):
+    item = Item.objects.get(id=item_id)
+    user_id = str(request.session['username'])
+    u = UserProfile.objects.get(user=User.objects.get(username=user_id))
+    u.watched_items.add(item)
+    u.save()
+    return HttpResponseRedirect("/saveditems/")
+

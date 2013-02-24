@@ -36,8 +36,8 @@
             {% endif %}
             <li class="span2">
             <div class="thumbnail">
-                <!--<a href="/result/{{ item.ID }}" rel="superbox[iframe][420x350]"><img src="{{ item.picfile }}" /></a><br />-->
-                <img src="{{ item.photo.url }}"/>
+                <a href="/manage/item/{{ item.id }}" rel="superbox[iframe][700x500]"><img src="{{ item.photo.url }}" /></a><br />
+               <!-- <img src="{{ item.photo.url }}"/> -->
                 Price: ${{ item.price }} <br />
             </div>
             </li>
@@ -48,9 +48,8 @@
     </ul>
     </div>
     {% else %}
-
         You're not selling anything!
-
+        <div style="height:500px;"></div>
     {% endif %}
 
 {% endblock %}
