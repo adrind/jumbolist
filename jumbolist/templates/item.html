@@ -2,6 +2,13 @@
 
 {% block content %}
 
-    <h2>{{ item.name }}</h2>
 
+
+    <h2>{{ item.name }}</h2>
+    <div class="span5">
+        <p>description goes here</p>
+    </div>
+    <div class="span5">
+        <img src={{ item.photo.url }} class="img-rounded"/>
+    </div>
 {% endblock %}
