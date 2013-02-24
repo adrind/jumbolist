@@ -138,6 +138,7 @@ def display_items(request):
         items = Item.objects.filter(id__in=list(list1))
         lowprice = request.POST['lowprice']
         highprice = request.POST['highprice']
+        sort = request.POST['sort']
         if lowprice:
             lowprice = Decimal(lowprice)
             print str(lowprice) + "low"
@@ -145,6 +146,12 @@ def display_items(request):
         if highprice:
             highprice = Decimal(highprice)
             items = items.filter(price__lte=highprice)
+        if sort:
+            if sort == "sortprice":
+                items = items.order_by("price")
+            elif sort == "sortdate":
+                items = items.order_by("date_added")
+
     else:
         items = Item.objects.exclude(seller__exact=currentUser)
 
