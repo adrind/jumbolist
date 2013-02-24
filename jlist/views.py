@@ -26,7 +26,7 @@ def register(request):
             #messages.info(request, "Thanks for registering! You're logged in")
             login(request, authenticate(username=request.POST['username'], password=request.POST['password']))
             request.session['username'] = request.POST['username']
-            return HttpResponseRedirect("/signup/")
+            return HttpResponseRedirect("/profile/")
 
         except ValidationError:
             render_to_response("signup.html", {'form': form, 'errors': ['User Already Exists']},
@@ -53,26 +53,27 @@ def login_attempt(request):
     else:
         return render_to_response("login.html", locals(), context_instance=RequestContext(request), )
 
-
+@login_required
 def profile(request):
     name = request.session['username']
     return render_to_response("profile.html", {'name': name}, context_instance=RequestContext(request), )
 
-
+@login_required
 def sellers_page(request):
     return render_to_response("sell.html", context_instance=RequestContext(request), )
 
-
+@login_required
 def buyers_page(request):
     return render_to_response("buy.html", context_instance=RequestContext(request), )
 
+@login_required
 def item_page(request, item_id):
     item = Item.objects.get(id=item_id)
     print item_id
     print item.name
     return render_to_response("item.html", {'item':item}, context_instance=RequestContext(request),)
 
-
+@login_required
 def display_items(request):
     items = Item.objects.all()
     fields = Item._meta.fields
@@ -85,6 +86,7 @@ def display_items(request):
 
     return render_to_response("marketplace.html", {'items': items, 'fields': fields, 'seller_names': seller_names},
                               context_instance=RequestContext(request), )
+@login_required
 
 def display_watched_items(request):
     user_id = str(request.session['username'])
@@ -112,7 +114,7 @@ def additem(request):
             new_item = form.save()
             user_id = str(request.session['username'])
             u = UserProfile.objects.get(user=User.objects.get(username=user_id))
-            new_item.photo = handle_uploaded_file(request.FILES['photo'])
+            new_item.photo = request.FILES['photo']
             new_item.seller = u
             new_item.save()
             return render_to_response("additem.html", {'form': None, 'success': True},
@@ -122,16 +124,7 @@ def additem(request):
     form = ItemForm(None)
     return render_to_response("additem.html", {'form': form}, context_instance=RequestContext(request), )
 
-
-def handle_uploaded_file(f, name):
-    url = 'http://127.0.0.1:8000/static/images/' + str(name)
-    destination = open(url, 'wb+')
-    for chunk in f.chunks():
-        destination.write(chunk)
-    destination.close()
-    return url
-
-
+@login_required
 def manage(request):
     user_id = str(request.session['username'])
     u = UserProfile.objects.get(user=User.objects.get(username=user_id))
