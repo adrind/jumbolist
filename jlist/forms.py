@@ -5,9 +5,21 @@ from jlist.models import UserProfile, Item
 from django.db import IntegrityError, models
 from django import forms
 
+
+BEDROOM = 'BD'
+BATHROOM = 'BA'
+KITCHEN = 'KH'
+LIVING_ROOM = 'LR'
+FURNITURE_CHOICES = (
+        (BEDROOM, 'Bedroom'),
+        (BATHROOM, 'Bathroom'),
+        (KITCHEN, 'Kitchen'),
+        (LIVING_ROOM, 'Living Room'),
+    )
+
 class MyUserForm(ModelForm):
     email = RegexField(label="",
-                      regex=r'^[a-zA-Z]+@tufts\.edu$',
+                      regex=r'^[a-zA-Z.]+@tufts\.edu$',
                       widget=TextInput(attrs={'placeholder': 'Tufts e-mail address'}),
                       error_messages={'invalid' :"Need a valid Tufts e-mail"})
     username = RegexField(label="", max_length=30, regex=r'^[\w.@+-]+$',
@@ -50,6 +62,7 @@ class ItemForm(ModelForm):
     description = CharField(label="", widget=forms.Textarea(attrs={'placeholder': 'Description'}))
     price = DecimalField(label='',decimal_places=2, widget=TextInput(attrs={'placeholder': 'Price'}))
     photo = forms.FileField(label='')
+    category = forms.ChoiceField(widget=forms.RadioSelect, choices = FURNITURE_CHOICES)
 
     class Meta:
         model=Item

@@ -264,6 +264,7 @@ def additem(request):
             user_id = str(request.session['username'])
             u = UserProfile.objects.get(user=User.objects.get(username=user_id))
             new_item.photo = request.FILES['photo']
+            new_item.category = request.POST['category']
             new_item.seller = u
             new_item.save()
             return render_to_response("additem.html",
