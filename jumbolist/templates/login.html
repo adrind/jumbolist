@@ -3,18 +3,22 @@
 {% block content %}
 
 
-    {% if error %}
+    <div class="buff" style="height:100px;"></div>
+        <div class="text-center">
+
+        {% if error %}
         <p class="error"> {{ error }} </p>
     {% endif %}
     <form action="" method="post"> {% csrf_token %}
-        <input type="text" name="username" id="userbox" placeholder="Username"> <br/>
-        <input type="password" name="password" id="passbox" placeholder="Password"/> <br/>
-      <span class="submit"><button class="btn btn-large btn-info" type="submit" value="Login" id="submitbox"> Enter
+        <input type="text" name="username" placeholder="Username"> <br/>
+        <input type="password" name="password" placeholder="Password"/> <br/>
+      <span class="submit"><button class="btn btn-large btn-info" type="submit" value="Login"> Enter
       </button>
       <input type="hidden" name="next" value="{{ next|escape }}"/> </span>
     </form>
 
     <br/> <br/>
+        </div>
 
 
 {% endblock %}

@@ -44,9 +44,9 @@ class MyUserForm(ModelForm):
 
 class ItemForm(ModelForm):
     name = CharField(label="", widget=TextInput(attrs={'placeholder': 'Title'}))
-    description = CharField(label="", widget=TextInput(attrs={'placeholder': 'Description'}))
-    price = DecimalField(decimal_places=2, widget=TextInput(attrs={'placeholder': 'Price'}))
-    photo = forms.FileField(label='Upload a photo!')
+    description = CharField(label="", widget=forms.Textarea(attrs={'placeholder': 'Description'}))
+    price = DecimalField(label='',decimal_places=2, widget=TextInput(attrs={'placeholder': 'Price'}))
+    photo = forms.FileField(label='')
 
     class Meta:
         model=Item
