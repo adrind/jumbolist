@@ -2,8 +2,14 @@
 
 {% block content %}
     {% if success %}
-        Congrats, you just added {{ name }}. Good for you!
-        <a href="/manage/">Manage</a> your items, <a href="/marketplace/">shop</a> for something new, or <a href="/additem/">add</a> something else.
+        <div style="height:150px;"></div>
+        <div class="text-center">
+        <img src={{ pic }}/><br/>
+        Congrats, you just added {{ item }}. Good for you!<br/>
+          <a href="/manage/">Manage</a> your items, <a href="/marketplace/">shop</a> for something new, or <a href="/additem/">add</a> something else.
+        </div>
+        <div style="height:250px;"></div>
+
     {% else %}
             <a href="/sell/"><button type="button" class="btn btn-primary">Back</button></a>
         <div class="text-center">

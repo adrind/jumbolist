@@ -11,13 +11,10 @@ class Item(models.Model):
     price = models.DecimalField(decimal_places=2, max_digits=6)
     sold = models.BooleanField()
     date_added = models.DateField(auto_now_add=True)
-    #photo =
+    photo = models.FileField(upload_to='photos/%Y/%m/%d')
 
     def get_fields(self):
         return [(field, field.verbose_name(self)) for field in Item._meta.fields]
-
-class ItemPhoto(models.Model):
-    photo = models.FileField(upload_to='photos/%Y/%m/%d')
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True, related_name="profile")

@@ -1,30 +1,52 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-    <div style="height:30px"></div>
-
     {% if items %}
-        <table class="table">
-            <tr>
-                <td><strong>Name</strong></td>
-                <td><strong>Description</strong></td>
-                <td><strong>Price</strong></td>
-                <td><strong>Date_added</strong></td>
-                <td><strong>Photo</strong></td>
+        <div class="row">
+        <div class="span10">
+        <div class="pagination">
 
-            </tr>
-            {% for item in items %}
-                <tr>
-                    <td>{{ item.name }} </td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.price }} </td>
-                    <td>{{ item.date_added }} </td>
-                    <td><img src={{ item.photo.url }}/></td>
-                </tr>
-            {% endfor %}
-        </table>
+        {% if items.has_previous %}
+          <a href="?page={{ items.previous_page_number }}">previous</a>
+        {% endif %}
 
+        <ul>
+        {% for page in items.paginator.page_range %}
+            {% if page == results.number %}
+              <li class="active"><a href="?page={{ page }}">{{ page }}</a></li>
+            {% else %}
+              <li><a href="?page={{ page }}">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+        {% if items.has_next %}
+          <a href="?page={{ items.next_page_number }}">next</a>
+        {% endif %}
+        </div>
+        </div>
+        </div>
+    <div id="pagination">
+    <div class="row">
+    <div class="span10">
+    <ul class ="thumbnails">
+
+        {% for item in items.object_list %}
+            {% if forloop.counter|divisibleby:5 %}
+                <div class = "row">
+            {% endif %}
+            <li class="span2">
+            <div class="thumbnail">
+                <!--<a href="/result/{{ item.ID }}" rel="superbox[iframe][420x350]"><img src="{{ item.picfile }}" /></a><br />-->
+                <img src="{{ item.photo.url }}"/>
+                Price: ${{ item.price }} <br />
+            </div>
+            </li>
+            {% if forloop.counter|divisibleby:5 %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    </div>
     {% else %}
 
         You're not selling anything!

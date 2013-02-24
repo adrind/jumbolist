@@ -10,6 +10,7 @@ from django.forms import ValidationError
 from jlist.models import Item, UserProfile, User
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def load_home(request):
@@ -121,7 +122,7 @@ def additem(request):
             new_item.photo = request.FILES['photo']
             new_item.seller = u
             new_item.save()
-            return render_to_response("additem.html", {'form': None, 'success': True, 'item':new_item.name},
+            return render_to_response("additem.html", {'form': None, 'success': True, 'item': new_item.name, 'pic': new_item.photo.url},
                                       context_instance=RequestContext(request), )
         return render_to_response("additem.html", {'form': form, 'errors': non_field_errors, },
                                   context_instance=RequestContext(request), )
@@ -132,5 +133,18 @@ def additem(request):
 def manage(request):
     user_id = str(request.session['username'])
     u = UserProfile.objects.get(user=User.objects.get(username=user_id))
-    items = list(Item.objects.filter(seller=u))
+    things = list(Item.objects.filter(seller=u))
+    if things:
+      paginator = Paginator(things, 10)
+      page = request.GET.get('page', 1)
+      try:
+          items = paginator.page(page)
+      except PageNotAnInteger:
+          # If page is not an integer, deliver first page.
+          items = paginator.page(1)
+      except EmptyPage:
+          # If page is out of range (e.g. 9999), deliver last page of results.
+          items = paginator.page(paginator.num_pages)
+
+
     return render_to_response("manage.html", {'items': items, })
