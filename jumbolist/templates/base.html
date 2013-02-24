@@ -6,8 +6,7 @@
     <script src="http://127.0.0.1:8000/static/bootstrap/js/bootstrap.min.js"></script>
     <link href="http://127.0.0.1:8000/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
-<body>
-
+<body style="background-color:#DDDDDD; padding-left: 20px">
 
 <div style="height: 20px"></div>
 
@@ -15,7 +14,7 @@
     <div class="span2">
         <img src="http://127.0.0.1:8000/static/images/logo.jpeg"/>
     </div>
-    <div class="span10" style="background-color:#4C8CB8; height:100px;border-radius:20px;">
+    <div class="span10" style="background-color:#6692CC; height:100px;border-radius:20px;">
         <h3 class="text-center" style="color:#FFF;">t r u n k s h o w</h3>
     </div>
 </div>
@@ -23,11 +22,11 @@
 <div style="height: 20px"></div>
 
 <div class="row">
-    <div class="span2" style="background-color:#4C8CB8;height:700px; border-radius:20px;">
+    <div class="span2">
         {% block toolbar %}
         {% endblock %}
     </div>
-    <div class="span10" style="border-top-left-radius:50px;">
+    <div class="span10" style="border-radius:20px; background-color: #FFFFDD; padding: 10px;">
         {% block content %}
         {% endblock %}
 
