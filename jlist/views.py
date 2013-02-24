@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response
 from jlist.forms import MyUserForm, ItemForm
 from jlist.models import UserProfile, Item
-from jlist.forms import MyUserForm, ItemForm
+from jlist.forms import MyUserForm, ItemForm, EmailForm
 from jlist.models import UserProfile, Item
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
@@ -16,7 +16,7 @@ from decimal import Decimal
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 import ast
-
+from django.core.mail import send_mail
 
 def load_home(request):
     return render_to_response("landing.html")
@@ -37,9 +37,9 @@ def register(request):
 
         except ValidationError:
             render_to_response("signup.html", {'form': form, 'errors': ['User Already Exists']},
-                context_instance=RequestContext(request))
+                               context_instance=RequestContext(request))
     return render_to_response("signup.html", {'form': form, 'errors': non_field_errors},
-        context_instance=RequestContext(request), )
+                              context_instance=RequestContext(request), )
 
 
 def login_attempt(request):
@@ -115,9 +115,15 @@ def buyers_page(request):
 @login_required
 def item_page(request, item_id):
     item = Item.objects.get(id=item_id)
+    return render_to_response("item.html", {'item':item}, context_instance=RequestContext(request),)
+
+@login_required
+def watched_item(request, item_id):
+    item = Item.objects.get(id=item_id)
     print item_id
     print item.name
-    return render_to_response("item.html", {'item': item}, context_instance=RequestContext(request), )
+    return render_to_response("watched_item.html", {'item':item}, context_instance=RequestContext(request),)
+
 
 
 @login_required
@@ -177,10 +183,9 @@ def display_watched_items(request):
     for item in watchedItems:
         #userP = UserProfile.objects.get(item.seller)
         user = User.objects.get(profile=item.seller)
-        seller_names[item.id] = user.username
+        item.seller_name = user.username
 
-    return render_to_response("watcheditems.html",
-        {'items': watchedItems, 'fields': fields, 'seller_names': seller_names},
+    return render_to_response("watcheditems.html", {'items': watchedItems, 'fields': fields, 'seller_names': seller_names},
         context_instance=RequestContext(request), )
 
 
@@ -196,14 +201,12 @@ def additem(request):
             new_item.photo = request.FILES['photo']
             new_item.seller = u
             new_item.save()
-            return render_to_response("additem.html",
-                {'form': None, 'success': True, 'item': new_item.name, 'pic': new_item.photo.url},
-                context_instance=RequestContext(request), )
+            return render_to_response("additem.html", {'form': None, 'success': True, 'item': new_item.name, 'pic': new_item.photo.url},
+                                      context_instance=RequestContext(request), )
         return render_to_response("additem.html", {'form': form, 'errors': non_field_errors, },
-            context_instance=RequestContext(request), )
+                                  context_instance=RequestContext(request), )
     form = ItemForm(None)
     return render_to_response("additem.html", {'form': form}, context_instance=RequestContext(request), )
-
 
 @login_required
 def manage(request):
@@ -211,16 +214,16 @@ def manage(request):
     u = UserProfile.objects.get(user=User.objects.get(username=user_id))
     items = list(Item.objects.filter(seller=u))
     if items:
-        paginator = Paginator(things, 10)
-        page = request.GET.get('page', 1)
-        try:
-            items = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-            items = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-            items = paginator.page(paginator.num_pages)
+      paginator = Paginator(things, 10)
+      page = request.GET.get('page', 1)
+      try:
+          items = paginator.page(page)
+      except PageNotAnInteger:
+          # If page is not an integer, deliver first page.
+          items = paginator.page(1)
+      except EmptyPage:
+          # If page is out of range (e.g. 9999), deliver last page of results.
+          items = paginator.page(paginator.num_pages)
     return render_to_response("manage.html", {'items': items, })
 
 

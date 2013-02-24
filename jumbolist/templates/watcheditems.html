@@ -40,10 +40,10 @@
             {% endif %}
             <li class="span2">
             <div class="thumbnail">
-                <a href="/marketplace/item/{{ item.id }}" rel="superbox[iframe][700x500]"><img src="{{ item.photo.url }}" /></a><br />
+                <a href="/watch/item/{{ item.id }}" rel="superbox[iframe][700x500]"><img src="{{ item.photo.url }}" /></a><br />
                <!-- <img src="{{ item.photo.url }}"/> -->
                 Price: ${{ item.price }} <br />
-                Seller: {{ seller_names.item.id }}
+                Seller: {{ item.seller_name }}
             </div>
             </li>
             {% if forloop.counter|divisibleby:5 %}

@@ -23,6 +23,9 @@ urlpatterns = patterns('',
     url(r'^marketplace/item/(?P<item_id>\w+)$', 'jlist.views.item_page', name='item'),
     url(r'^manage/item/(?P<item_id>\w+)$', 'jlist.views.item_page', name='seller_item'),
     url(r'^save/item/(?P<item_id>\w+)$', 'jlist.views.save_item', name='save_item'),
+    url(r'^watch/item/(?P<item_id>\w+)$', 'jlist.views.watched_item', name='save_item'),
+    url(r'^remove/item/(?P<item_id>\w+)$', 'jlist.views.remove_item', name='remove'),
+    url(r'^offer/(?P<item_id>\w+)$', 'jlist.views.send_email', name='remove'),
 
 
 
