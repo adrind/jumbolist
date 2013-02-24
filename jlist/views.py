@@ -58,6 +58,10 @@ def sellers_page(request):
     return render_to_response("sell.html", context_instance=RequestContext(request),)
 
 
+def buyers_page(request):
+    return render_to_response("buy.html", context_instance=RequestContext(request),)
+
+
 def display_items(request):
     items = Item.objects.all()
     fields    = Item._meta.fields
@@ -68,7 +72,7 @@ def display_items(request):
         user = User.objects.get(profile=item.seller)
         seller_names.append(user.username)
 
-    return render_to_response("displayItems.html", {'items':items, 'fields':fields, 'seller_names':seller_names}, context_instance=RequestContext(request),)
+    return render_to_response("marketplace.html", {'items':items, 'fields':fields, 'seller_names':seller_names}, context_instance=RequestContext(request),)
 
 #soooo hacky
 def additem(request):
