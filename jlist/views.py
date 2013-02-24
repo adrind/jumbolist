@@ -1,10 +1,12 @@
 from django.shortcuts import render_to_response
-from jlist.forms import MyUserForm
+from jlist.forms import MyUserForm, ItemForm
+from jlist.models import UserProfile, Item
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth import authenticate, logout, login
 from django.forms import ValidationError
 from jlist.models import Item, UserProfile, User
+
 
 def load_home(request):
     return render_to_response("landing.html")
@@ -25,7 +27,6 @@ def register(request):
         except ValidationError:
             render_to_response("signup.html", {'form': form, 'errors': ['User Already Exists']}, context_instance=RequestContext(request))
     return render_to_response("signup.html", {'form': form, 'errors': non_field_errors}, context_instance=RequestContext(request),)
-
 
 def login_attempt(request):
         if request.method == 'POST':
@@ -65,19 +66,45 @@ def display_items(request):
 
     return render_to_response("displayItems.html", {'items':items, 'fields':fields, 'seller_names':seller_names}, context_instance=RequestContext(request),)
 
-'''def add(request):
+#soooo hacky
+def additem(request):
+    form = ItemForm(request.POST or None)
     if request.method == 'POST':
-        item = ItemForm(request.POST, request.FILES)
         non_field_errors = []
         if form.is_valid():
             new_item = form.save()
+            user_id = str(request.session['username'])
+            u = UserProfile.objects.get(user=User.objects.get(username = user_id))
+            new_item.seller = u
+            new_item.save()
+            return render_to_response("additem.html", {'form':None, 'success' : True}, context_instance=RequestContext(request),)
+        return render_to_response("additem.html", {'form': form, 'errors': non_field_errors, }, context_instance=RequestContext(request),)
+    return render_to_response("additem.html", {'form': form},  context_instance=RequestContext(request),)
 
-            #new_user.full_clean()
-            new_user.save()
-
-            login(request, authenticate(username=request.POST['username'], password=request.POST['password']))
-            request.session['username'] = request.POST['username']
-            return HttpResponseRedirect("/signup/")
-    r   eturn render_to_response("signup.html", {'form': form, 'errors': non_field_errors}, context_instance=RequestContext(request),)'''
+def manage(request):
+    user_id = str(request.session['username'])
+    u = UserProfile.objects.get(user=User.objects.get(username = user_id))
+    items = list(Item.objects.filter(seller=u))
+    return render_to_response("manage.html", {'items':items,})
 
 
+#soooo hacky
+def additem(request):
+    form = ItemForm(request.POST or None)
+    if request.method == 'POST':
+        non_field_errors = []
+        if form.is_valid():
+            new_item = form.save()
+            user_id = str(request.session['username'])
+            u = UserProfile.objects.get(user=User.objects.get(username = user_id))
+            new_item.seller = u
+            new_item.save()
+            return render_to_response("additem.html", {'form':None, 'success' : True}, context_instance=RequestContext(request),)
+        return render_to_response("additem.html", {'form': form, 'errors': non_field_errors, }, context_instance=RequestContext(request),)
+    return render_to_response("additem.html", {'form': form},  context_instance=RequestContext(request),)
+
+def manage(request):
+    user_id = str(request.session['username'])
+    u = UserProfile.objects.get(user=User.objects.get(username = user_id))
+    items = list(Item.objects.filter(seller=u))
+    return render_to_response("manage.html", {'items':items,})
