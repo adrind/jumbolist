@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    {% if items %}
+        <table class="table">
+        <tr>
+            <td><strong>Name</strong></td>
+            <td><strong>Description</strong></td>
+            <td><strong>Price</strong></td>
+            <td><strong>Date_added</strong></td>
+        </tr>
+        {% for item in items %}
+            <tr>
+            <td>{{ item.name }} </td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.price }} </td>
+            <td>{{ item.date_added }} </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% else %}
+
+        You're not selling anything!
+
+    {% endif %}
+
+{% endblock %}

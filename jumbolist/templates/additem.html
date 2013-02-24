@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if success %}
+    YAY
+    {% endif %}
+
+<form enctype="multipart/form-data" method="post" action="">{% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success" value="Add Item">Add Item</button>
+
+
+{% endblock %}
