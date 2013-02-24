@@ -5,19 +5,26 @@
 {% block toolbar %}
     <div style="background-color: #3C99DF; height:500px; border-radius:20px;padding:10px;">
         <p>Filters</p>
-    <form action="/marketplace/" method="post"> {% csrf_token %}
-        <p>Price range</p>
-        <input style="width:40px;" type="text" id="id_lowprice" name="lowprice" placeholder="low">
-        <span>-</span>
-        <input style="Width:40px;" type="text" id="id_highprice" name="highprice" placeholder="high"/> <br/>
-      <span class="submit"><button class="btn btn-info" type="submit" value="Apply"> Enter
+
+        <form action="/marketplace/" method="post"> {% csrf_token %}
+                <fieldset style="border:2px groove white;display:block;padding:8.75px 10.5px;margin:5px;">
+                    <legend style="padding:0px 2px 5px 2px;border:none;margin-bottom: 0px;font-size:13px;line-height:20px;padding-top:5px;width:75px;font-family:'Domine',serif;">Price range</legend>
+                    <input style="width:40px;" type="text" id="id_lowprice" name="lowprice" placeholder="low">
+                    <span>-</span>
+                    <input style="Width:40px;" type="text" id="id_highprice" name="highprice" placeholder="high"/> <br/>
+                </fieldset>
+            <br>
+            <fieldset style="border:2px groove white;display:block;padding:8.75px 10.5px;margin:5px;">
+                <legend style="padding:0px 2px 5px 2px;border:none;margin-bottom: 0px;font-size:13px;line-height:20px;padding-top:5px;
+                width:55px;font-family:'Domine',serif;">Sort By</legend>
+                <label><input style="width:40px;" type="radio" id="id_sortprice" name="sort" value="sortprice"/>Price</label>
+                <label><input style="Width:40px;" type="radio" id="id_sortdate" name="sort" value="sortdate"/>Date</label>
+            </fieldset>
+            <br>
+      <span class="submit"><button class="btn btn" style="float:right;margin-right: 10px;"type="submit" value="Apply">Apply
       </button>
       <input type="hidden" name="next" value="{{ next|escape }}"/>
-          {% if items %}
-        <input style="display: hidden;" type="text" name="itemidlist" value="{{ itemidlist }}"/> </span>
-        {% endif %}
-
-    </form>
+        </form>
     </div>
 {% endblock %}
 
@@ -87,10 +94,12 @@
         <div style="height:200px;"></div>
 
         <div class="row">
-        <div class="span10">
-            <div class="text-center">
-        There's nothing for sale!? Crazy!!</div>
-        </div></div>
+            <div class="span10">
+                <div class="text-center">
+                    There's nothing for sale!? Crazy!!
+                </div>
+            </div>
+        </div>
         <div style="height:200px;"></div>
     {% endif %}
 
