@@ -40,7 +40,7 @@
             {% endif %}
             <li class="span2">
             <div class="thumbnail">
-                <a href="/watch/item/{{ item.id }}" rel="superbox[iframe][700x500]"><img src="{{ item.photo.url }}" /></a><br />
+                <a href="/watch/item/{{ item.id }}" rel="superbox[iframe][400x400]"><img src="{{ item.photo.url }}" /></a><br />
                <!-- <img src="{{ item.photo.url }}"/> -->
                 Price: ${{ item.price }} <br />
                 Seller: {{ item.seller_name }}
@@ -53,8 +53,15 @@
     </ul>
     </div>
     {% else %}
+        <div style="height:200px;"></div>
+
+        <div class="row">
+        <div class="span10">
+            <div class="text-center">
+
         You're not watching anything!
-        <div style="height:500px;"></div>
+            </div></div></div>
+        <div style="height:200px;"></div>
     {% endif %}
 
 {% endblock %}

@@ -7,7 +7,7 @@ from django import forms
 
 class MyUserForm(ModelForm):
     email = RegexField(label="",
-                      regex='r^[_a-z0-9-]+(\.[_a-z0-9-]+)+@tufts.edu',
+                      regex=r'^[a-zA-Z]+@tufts\.edu$',
                       widget=TextInput(attrs={'placeholder': 'Tufts e-mail address'}),
                       error_messages={'invalid' :"Need a valid Tufts e-mail"})
     username = RegexField(label="", max_length=30, regex=r'^[\w.@+-]+$',
@@ -68,6 +68,7 @@ class ItemForm(ModelForm):
 
 class EmailForm(forms.Form):
     subject = forms.CharField(label='', max_length=100, widget=TextInput(attrs={'placeholder': 'Subject'}))
-    message = forms.CharField(label='', widget=TextInput(attrs={'placeholder': 'Body'}))
+    message = forms.CharField(label='', widget=forms.Textarea(attrs={'placeholder':
+                                                            "Description (don't forget to say something about the price you want to offer!)"}))
     #sender = forms.EmailField(label='', widget=TextInput(attrs={'placeholder': 'Title'}))
-    cc_me = forms.BooleanField(label='', required=False)
+    cc_me = forms.BooleanField(label='CC yourself?', required=False)

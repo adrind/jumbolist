@@ -55,7 +55,7 @@
                     {% endif %}
                 <li class="span2">
                     <div class="thumbnail">
-                        <a href="/marketplace/item/{{ item.id }}" rel="superbox[iframe][700x500]"><img
+                        <a href="/marketplace/item/{{ item.id }}" rel="superbox[iframe][400x400]"><img
                                 src="{{ item.photo.url }}"/></a><br/>
                         <!-- <img src="{{ item.photo.url }}"/> -->
                         Price: ${{ item.price }} <br/>
@@ -68,8 +68,14 @@
             </ul>
         </div>
     {% else %}
-        There's nothing for sale!? Crazy!!
-        <div style="height:500px;"></div>
+        <div style="height:200px;"></div>
+
+        <div class="row">
+        <div class="span10">
+            <div class="text-center">
+        There's nothing for sale!? Crazy!!</div>
+        </div></div>
+        <div style="height:200px;"></div>
     {% endif %}
 
 {% endblock %}

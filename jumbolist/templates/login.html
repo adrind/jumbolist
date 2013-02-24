@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <fieldset>
 
+    <div class="span5" style="margin-top: 20px;">
+            <legend><span style="margin-left:0px;margin-top:10px;font-family:'Domine',serif;font-size:35px;text-align: left">Login</span></legend>
+        </div>
 
     <div class="buff" style="height:100px;"></div>
         <div class="text-center">
@@ -16,9 +20,9 @@
       </button>
       <input type="hidden" name="next" value="{{ next|escape }}"/> </span>
     </form>
-
     <br/> <br/>
         </div>
+    </fieldset>
 
 
 {% endblock %}

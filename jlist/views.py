@@ -152,7 +152,7 @@ def manage(request):
     u = UserProfile.objects.get(user=User.objects.get(username=user_id))
     items = list(Item.objects.filter(seller=u))
     if items:
-      paginator = Paginator(things, 10)
+      paginator = Paginator(items, 10)
       page = request.GET.get('page', 1)
       try:
           items = paginator.page(page)
@@ -192,6 +192,7 @@ def send_email(request, item_id):
             seller = User.objects.get(profile=item.seller)
             send_mail(subject, message, u.email,
                 [seller.email], fail_silently=False)
+            return render_to_response('email.html', {'success' : True, 'name' : u.username }, context_instance=RequestContext(request),)
     else:
         form = EmailForm()
 

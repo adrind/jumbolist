@@ -1,18 +1,20 @@
-{% extends "base.html" %}
+{% extends "item_base.html" %}
 
 {% block content %}
 
 
 
-    <h2>{{ item.name }}</h2>
+    <h2>{{ item.name }}</h2><br/>
     <div class="row">
-    <div class="span5">
+    <div class="span2">
+        <img src="{{ item.photo.url }}" class="img-rounded"/>
+
+    </div>
+    <div class="span2">
         <p>{{ item.description }}</p>
     </div>
-    <div class="span5">
-        <img src={{ item.photo.url }} class="img-rounded"/>
-    </div>
-    </div>
-    <a href="/save/item/{{ item.id }}">Save</a> <a href="/offer/{{ item.id }}">Offer</a>
+    </div><br/><br/>
+    <a href="/save/item/{{ item.id }}" target="_blank"><button class="btn">Save</button></a>
+    <a href="/offer/{{ item.id }}" target="_blank"><button class="btn">Offer</button></a>
 
 {% endblock %}

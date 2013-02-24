@@ -3,7 +3,19 @@
 
 {% block content %}
 
+    {% if success %}
+        <div style="height:200px;"></div>
 
+        <div class="row">
+        <div class="span10">
+            <div class="text-center">
+
+        Congrats! You just sent an e-mail to {{ name }}. Hope it works out. <br/>
+                Wanna <a href="/buy/">buy</a> something else or go <a href="/profile/">home?</a>
+        </div></div></div>
+        <div style="height:200px;"></div>
+
+    {% else %}
 <legend>Email</legend>
            {% if errors %}
                {% for error in errors %}
@@ -18,4 +30,5 @@
                <button type="submit" class="btn btn-success" value="Send the email">Send!</button>
            </form>
 
+    {% endif %}
 {% endblock %}
