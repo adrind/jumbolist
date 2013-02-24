@@ -1,11 +1,15 @@
 from django.shortcuts import render_to_response
 from jlist.forms import MyUserForm, ItemForm
 from jlist.models import UserProfile, Item
+from jlist.forms import MyUserForm, ItemForm
+from jlist.models import UserProfile, Item
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth import authenticate, logout, login
 from django.forms import ValidationError
 from jlist.models import Item, UserProfile, User
+from django.contrib.auth.models import User
+
 
 
 def load_home(request):
@@ -65,28 +69,6 @@ def display_items(request):
         seller_names.append(user.username)
 
     return render_to_response("displayItems.html", {'items':items, 'fields':fields, 'seller_names':seller_names}, context_instance=RequestContext(request),)
-
-#soooo hacky
-def additem(request):
-    form = ItemForm(request.POST or None)
-    if request.method == 'POST':
-        non_field_errors = []
-        if form.is_valid():
-            new_item = form.save()
-            user_id = str(request.session['username'])
-            u = UserProfile.objects.get(user=User.objects.get(username = user_id))
-            new_item.seller = u
-            new_item.save()
-            return render_to_response("additem.html", {'form':None, 'success' : True}, context_instance=RequestContext(request),)
-        return render_to_response("additem.html", {'form': form, 'errors': non_field_errors, }, context_instance=RequestContext(request),)
-    return render_to_response("additem.html", {'form': form},  context_instance=RequestContext(request),)
-
-def manage(request):
-    user_id = str(request.session['username'])
-    u = UserProfile.objects.get(user=User.objects.get(username = user_id))
-    items = list(Item.objects.filter(seller=u))
-    return render_to_response("manage.html", {'items':items,})
-
 
 #soooo hacky
 def additem(request):

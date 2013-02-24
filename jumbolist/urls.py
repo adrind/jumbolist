@@ -13,7 +13,6 @@ urlpatterns = patterns('',
      url(r'^sell/$', 'jlist.views.sellers_page', name='sellers'),
      url(r'^additem/$', 'jlist.views.additem', name='add'),
      url(r'^manage/$', 'jlist.views.manage', name='manage'),
-     url(r'^additem/$', 'jlist.views.add', name='add'),
     url(r'^displayItems/$', 'jlist.views.display_items', name='display_items'),
 
 
