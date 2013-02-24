@@ -12,6 +12,18 @@ class Item(models.Model):
     sold = models.BooleanField()
     date_added = models.DateField(auto_now_add=True)
     photo = models.FileField(upload_to='photos/%Y/%m/%d')
+    BEDROOM = 'BD'
+    BATHROOM = 'BA'
+    KITCHEN = 'KH'
+    LIVING_ROOM = 'LR'
+    FURNITURE_CHOICES = (
+        (BEDROOM, 'Bedroom'),
+        (BATHROOM, 'Bathroom'),
+        (KITCHEN, 'Kitchen'),
+        (LIVING_ROOM, 'Living Room'),
+    )
+    category = models.CharField(max_length = 2, choices=FURNITURE_CHOICES, default=LIVING_ROOM)
+
 
     def get_fields(self):
         return [(field, field.verbose_name(self)) for field in Item._meta.fields]
