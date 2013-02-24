@@ -324,7 +324,7 @@ def send_email(request, item_id):
             seller = User.objects.get(profile=item.seller)
             send_mail(subject, message, u.email,
                 [seller.email], fail_silently=False)
-            return render_to_response('email.html', {'success': True, 'name': u.username},
+            return render_to_response('email.html', {'success': True, 'name': seller.username},
                 context_instance=RequestContext(request), )
     else:
         form = EmailForm()
