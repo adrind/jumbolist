@@ -1,22 +1,40 @@
 {% extends "base.html" %}
 
 
+
+{% block toolbar %}
+    <div style="background-color: #3C99DF; height:500px; border-radius:20px;padding:10px;">
+        <p>Filters</p>
+    <form action="/marketplace/" method="post"> {% csrf_token %}
+        <p>Price range</p>
+        <input style="width:40px;" type="text" id="id_lowprice" name="lowprice" placeholder="low">
+        <span>-</span>
+        <input style="Width:40px;" type="text" id="id_highprice" name="highprice" placeholder="high"/> <br/>
+      <span class="submit"><button class="btn btn-info" type="submit" value="Apply"> Enter
+      </button>
+      <input type="hidden" name="next" value="{{ next|escape }}"/>
+          {% if items %}
+        <input style="display: hidden;" type="text" name="itemidlist" value="{{ itemidlist }}"/> </span>
+        {% endif %}
+
+    </form>
+    </div>
+{% endblock %}
+
+
 {% block content %}
 
-
-
-        <div class="span5" style="margin-left: 10px;">
-            <span style="margin-left:0px;margin-left:10px;font-family:'Domine',serif;font-size:35px;text-align: left">For Sale</span>
-        </div>
-        <div class="span4" style="margin-top: 0px; margin-right: 0px;">
-            <a href="/saveditems/">
-                <div class="span4"
-                     style="font-family:'Domine',serif;font-size:16px;padding-top:0px;padding-bottom:10px;padding-left:220px;margin-right:0px;text-align: left">
-                    <span style="background-color: #64421E;padding:10px 15px; width:50px;color:white;border-radius:8px;">View Saved Items</span>
-                </div>
-            </a>
-        </div>
-
+    <div class="span5" style="margin-left: 10px;">
+        <span style="margin-left:0px;margin-left:10px;font-family:'Domine',serif;font-size:35px;text-align: left">For Sale</span>
+    </div>
+    <div class="span4" style="margin-top: 0px; margin-right: 0px;">
+        <a href="/saveditems/">
+            <div class="span4"
+                 style="font-family:'Domine',serif;font-size:16px;padding-top:0px;padding-bottom:10px;padding-left:220px;margin-right:0px;text-align: left">
+                <span style="background-color: #64421E;padding:10px 15px; width:50px;color:white;border-radius:8px;">View Saved Items</span>
+            </div>
+        </a>
+    </div>
 
 
 
@@ -24,11 +42,9 @@
         <div class="row">
             <div class="span10">
                 <div class="pagination">
-
                     {% if items.has_previous %}
                         <a href="?page={{ items.previous_page_number }}">previous</a>
                     {% endif %}
-
                     <ul>
                         {% for page in items.paginator.page_range %}
                             {% if page == results.number %}

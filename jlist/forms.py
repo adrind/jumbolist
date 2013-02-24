@@ -61,3 +61,5 @@ class ItemForm(ModelForm):
         #item.photo = self.cleaned_data
         #item.user = User.objects.get(user.username=)
         return item
+
+
