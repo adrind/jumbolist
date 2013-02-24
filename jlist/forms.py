@@ -58,6 +58,6 @@ class ItemForm(ModelForm):
         item.description = self.cleaned_data['description']
         item.price = self.cleaned_data['price']
         item.sold = False
-        #item.photo = "http://127.0.0.1:8000/static/images/something.jpg"
+        #item.photo = self.cleaned_data
         #item.user = User.objects.get(user.username=)
         return item
