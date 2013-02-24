@@ -86,6 +86,23 @@ def display_items(request):
     return render_to_response("marketplace.html", {'items': items, 'fields': fields, 'seller_names': seller_names},
                               context_instance=RequestContext(request), )
 
+def display_watched_items(request):
+    user_id = str(request.session['username'])
+    currentUser = UserProfile.objects.get(user=User.objects.get(username=user_id))
+    watchedItems = currentUser.watched_items.all()
+
+    fields = Item._meta.fields
+
+    seller_names = []
+    for item in watchedItems:
+        #userP = UserProfile.objects.get(item.seller)
+        user = User.objects.get(profile=item.seller)
+        seller_names.append(user.username)
+
+    return render_to_response("watcheditems.html", {'watchedItems': watchedItems, 'fields': fields, 'seller_names': seller_names},
+        context_instance=RequestContext(request), )
+
+
 #soooo hacky
 def additem(request):
     if request.method == 'POST':

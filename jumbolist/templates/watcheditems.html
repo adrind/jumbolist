@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <h2 xmlns="http://www.w3.org/1999/html">Watched Items</h2>
+    <table class="table">
+        <tr>
+            <th>Seller</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Date Added</th>
+            <th>Photo</th>
+
+        </tr>
+        <tbody>
+        {% for item in items %}
+            <tr>
+                <td>{{ item.seller }}</td>
+                <td><button class="btn"><a href="/marketplace/item/{{ item.id }}">{{ item.name }}</a></button></td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.date_added }}</td>
+                <td>{{ item.photo }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}
