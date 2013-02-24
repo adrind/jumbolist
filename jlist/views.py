@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response
 from jlist.forms import MyUserForm, ItemForm
 from jlist.models import UserProfile, Item
-from jlist.forms import MyUserForm, ItemForm
+from jlist.forms import MyUserForm, ItemForm, EmailForm
 from jlist.models import UserProfile, Item
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from collections import defaultdict
-
+from django.core.mail import send_mail
 
 def load_home(request):
     return render_to_response("landing.html")
@@ -72,9 +72,15 @@ def buyers_page(request):
 @login_required
 def item_page(request, item_id):
     item = Item.objects.get(id=item_id)
+    return render_to_response("item.html", {'item':item}, context_instance=RequestContext(request),)
+
+@login_required
+def watched_item(request, item_id):
+    item = Item.objects.get(id=item_id)
     print item_id
     print item.name
-    return render_to_response("item.html", {'item':item}, context_instance=RequestContext(request),)
+    return render_to_response("watched_item.html", {'item':item}, context_instance=RequestContext(request),)
+
 
 @login_required
 def display_items(request):
@@ -115,7 +121,7 @@ def display_watched_items(request):
     for item in watchedItems:
         #userP = UserProfile.objects.get(item.seller)
         user = User.objects.get(profile=item.seller)
-        seller_names[item.id] = user.username
+        item.seller_name = user.username
 
     return render_to_response("watcheditems.html", {'items': watchedItems, 'fields': fields, 'seller_names': seller_names},
         context_instance=RequestContext(request), )
@@ -166,4 +172,28 @@ def save_item(request, item_id):
     u.watched_items.add(item)
     u.save()
     return HttpResponseRedirect("/saveditems/")
+
+def remove_item(request, item_id):
+    item = Item.objects.get(id=item_id)
+    user_id = str(request.session['username'])
+    u = UserProfile.objects.get(user=User.objects.get(username=user_id))
+    u.watched_items.remove(item)
+    u.save()
+    return HttpResponseRedirect("/saveditems/")
+
+def send_email(request, item_id):
+    if request.method == 'POST':
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            subject = request.POST['subject']
+            message = request.POST['message']
+            u = User.objects.get(username=str(request.session['username']))
+            item = Item.objects.get(id=item_id)
+            seller = User.objects.get(profile=item.seller)
+            send_mail(subject, message, u.email,
+                [seller.email], fail_silently=False)
+    else:
+        form = EmailForm()
+
+    return render_to_response('email.html', {'form' : form}, context_instance=RequestContext(request),)
 

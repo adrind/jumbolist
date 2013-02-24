@@ -6,7 +6,10 @@ from django.db import IntegrityError, models
 from django import forms
 
 class MyUserForm(ModelForm):
-    email = CharField(label="", widget=TextInput(attrs={'placeholder': 'E-mail address'}))
+    email = RegexField(label="",
+                      regex='r^[_a-z0-9-]+(\.[_a-z0-9-]+)+@tufts.edu',
+                      widget=TextInput(attrs={'placeholder': 'Tufts e-mail address'}),
+                      error_messages={'invalid' :"Need a valid Tufts e-mail"})
     username = RegexField(label="", max_length=30, regex=r'^[\w.@+-]+$',
         help_text = "Please use letters, numbers, or @/./+/-/_",
         error_messages = {'invalid': "This value may contain only letters, numbers and @/./+/-/_ characters."},
@@ -61,3 +64,10 @@ class ItemForm(ModelForm):
         #item.photo = self.cleaned_data
         #item.user = User.objects.get(user.username=)
         return item
+
+
+class EmailForm(forms.Form):
+    subject = forms.CharField(label='', max_length=100, widget=TextInput(attrs={'placeholder': 'Subject'}))
+    message = forms.CharField(label='', widget=TextInput(attrs={'placeholder': 'Body'}))
+    #sender = forms.EmailField(label='', widget=TextInput(attrs={'placeholder': 'Title'}))
+    cc_me = forms.BooleanField(label='', required=False)
