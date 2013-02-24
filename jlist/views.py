@@ -60,7 +60,7 @@ def sellers_page(request):
 
 def display_items(request):
     items = Item.objects.all()
-    fields    = Item._meta.fields
+    fields  = Item._meta.fields
 
     seller_names = []
     for item in items:
@@ -72,7 +72,7 @@ def display_items(request):
 
 #soooo hacky
 def additem(request):
-    form = ItemForm(request.POST or None)
+    form = Item(request.POST, request.FILES)
     if request.method == 'POST':
         non_field_errors = []
         if form.is_valid():

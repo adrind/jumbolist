@@ -10,6 +10,8 @@
             <td><strong>Description</strong></td>
             <td><strong>Price</strong></td>
             <td><strong>Date_added</strong></td>
+            <td><strong>Photo</strong></td>
+
         </tr>
         {% for item in items %}
             <tr>
@@ -17,6 +19,7 @@
             <td>{{ item.description }}</td>
             <td>{{ item.price }} </td>
             <td>{{ item.date_added }} </td>
+            <td><img src={{ item.photo }}/></td>
             </tr>
         {% endfor %}
     </table>
