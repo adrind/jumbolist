@@ -3,7 +3,7 @@
 {% block content %}
 
 
-    <h2>Items</h2>
+    <h2 xmlns="http://www.w3.org/1999/html">Items</h2>
     <table class="table">
         <tr>
             <th>Seller</th>
@@ -18,7 +18,7 @@
         {% for item in items %}
             <tr>
                 <td>{{ item.seller }}</td>
-                <td>{{ item.name }}</td>
+                <td><button class="btn"><a href="/marketplace/item/{{ item.id }}">{{ item.name }}</a></button></td>
                 <td>{{ item.description }}</td>
                 <td>{{ item.price }}</td>
                 <td>{{ item.date_added }}</td>
